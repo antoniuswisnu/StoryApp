@@ -4,11 +4,15 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.WindowInsets
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.storyapp.R
 import com.example.storyapp.adapter.StoryAdapter
 import com.example.storyapp.api.response.ListStoryItem
 import com.example.storyapp.databinding.ActivityMainBinding
@@ -72,14 +76,31 @@ class MainActivity : AppCompatActivity() {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN
             )
         }
-        supportActionBar?.hide()
+//        supportActionBar?.hide()
     }
 
-//    private fun setupAction() {
-//        binding.logoutButton.setOnClickListener {
-//            viewModel.logout()
-//        }
-//    }
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu,menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId){
+            R.id.about -> {
+                Toast.makeText(this,"About Selected",Toast.LENGTH_SHORT).show()
+            }
+            R.id.settings -> {
+                Toast.makeText(this,"Settings Selected",Toast.LENGTH_SHORT).show()
+                startActivity(Intent(android.provider.Settings.ACTION_LOCALE_SETTINGS))
+            }
+            R.id.exit -> {
+                viewModel.logout()
+                Toast.makeText(this,"Logout",Toast.LENGTH_SHORT).show()
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
 //
 //    private fun playAnimation() {
 //        ObjectAnimator.ofFloat(binding.imageView, View.TRANSLATION_X, -30f, 30f).apply {

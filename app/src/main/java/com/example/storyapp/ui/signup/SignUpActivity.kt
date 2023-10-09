@@ -11,12 +11,17 @@ import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import com.example.storyapp.R
 import com.example.storyapp.api.response.ErrorResponse
+import com.example.storyapp.api.retrofit.ApiConfig
 import com.example.storyapp.custom.CustomButton
 import com.example.storyapp.custom.CustomEditText
+import com.example.storyapp.data.repository.RegisterRepository
 import com.example.storyapp.databinding.ActivitySignUpBinding
+import com.example.storyapp.ui.ViewModelFactory
+import com.example.storyapp.ui.login.SessionViewModel
 import com.google.gson.Gson
 import retrofit2.HttpException
 
@@ -26,7 +31,9 @@ class SignUpActivity : AppCompatActivity() {
     private lateinit var customButton: CustomButton
     private lateinit var customEditText: CustomEditText
     private lateinit var viewModel: SignUpViewModel
-
+    private val sessionViewModel by viewModels<SessionViewModel> {
+        ViewModelFactory.getInstance(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -107,31 +114,30 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun setupAction() {
-//        val apiService = ApiConfig().getApiService()
-//        val registerRepository = RegisterRepository(apiService)
-//        viewModel = SignUpViewModel(registerRepository)
-
-//        viewModel = SignUpViewModel(RegisterRepository(ApiConfig().getApiService())
+        viewModel = SignUpViewModel(RegisterRepository(
+            ApiConfig.getApiService(
+                sessionViewModel.getSession().toString()
+            )
+        ))
 
         binding.signupButton.setOnClickListener {
             val name = binding.nameEditTextLayout.text.toString()
             val email = binding.emailEditText.text.toString()
             val password = binding.passwordEditText.text.toString()
 
+            if(name.isEmpty() || email.isEmpty() || password.isEmpty()){
+                Toast.makeText(this, "Please fill all the fields", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            } else {
             try{
                 viewModel.register(name, email, password).observe(this) { response ->
                     if (response != null) {
                         if (response.error) {
                             Log.d("SignUpActivity", "Registration failed ${response.message}")
-                            Toast.makeText(this, response.message, Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this, "Please fill all the fields", Toast.LENGTH_SHORT).show()
                         } else {
-
                             Log.d("SignUpActivity", "Registration successful ${response.message} $")
-                            Toast.makeText(
-                                this,
-                                "Registration successful ${response.message}",
-                                Toast.LENGTH_SHORT
-                            ).show()
+
                         }
                     }
                 }
@@ -141,16 +147,17 @@ class SignUpActivity : AppCompatActivity() {
                 val errorMessage = errorBody.message
                 Log.e("SignUpActivity", errorMessage.toString())
             }
-
-            AlertDialog.Builder(this).apply {
-                setTitle("Yeah!")
-                setMessage("Akun dengan $email sudah jadi nih. Yuk, Buat Story Kamu!")
-                setPositiveButton("Lanjut") { _, _ ->
-                    finish()
+                AlertDialog.Builder(this).apply {
+                    setTitle("Yeah!")
+                    setMessage("Akun dengan $email sudah jadi nih. Yuk, Buat Story Kamu!")
+                    setPositiveButton("Lanjut") { _, _ ->
+                        finish()
+                    }
+                    create()
+                    show()
                 }
-                create()
-                show()
             }
+            Log.d("SignUpActivity", "Registration successful $name $email $password")
         }
     }
 

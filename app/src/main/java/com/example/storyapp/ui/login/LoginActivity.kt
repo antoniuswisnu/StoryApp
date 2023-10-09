@@ -58,7 +58,6 @@ class LoginActivity : AppCompatActivity() {
                 // Do nothing.
             }
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                // error ketika tidak ada @
                 if (!s.toString().contains("@email")) {
                     binding.emailEditTextLayout.error = getString(R.string.error_email)
                 } else {
@@ -97,6 +96,10 @@ class LoginActivity : AppCompatActivity() {
             var email = binding.emailEditText.text.toString()
             var password = binding.passwordEditText.text.toString()
 
+            if(email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(this, "Please fill all the fields", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            } else {
             loginViewModel.login(email, password).observe(this) { response ->
                     if (response.error == true) {
                         Log.d("LoginActivity", "Login failed ${response.message}")
@@ -121,6 +124,8 @@ class LoginActivity : AppCompatActivity() {
                         val intent = Intent(this, MainActivity::class.java)
                         startActivity(intent)
                     }
+                Log.d("LoginActivity", "Login successful ${response.message}")
+            }
             }
         }
     }

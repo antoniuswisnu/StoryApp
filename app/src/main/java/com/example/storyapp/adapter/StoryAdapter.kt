@@ -1,10 +1,13 @@
 package com.example.storyapp.adapter
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityOptionsCompat
+import androidx.core.util.Pair
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.storyapp.R
@@ -43,7 +46,15 @@ class StoryAdapter : RecyclerView.Adapter<StoryAdapter.StoryViewHolder>() {
                 intent.putExtra("name", story.name)
                 intent.putExtra("description", story.description)
                 intent.putExtra("photoUrl", story.photoUrl)
-                context.startActivity(intent)
+
+                val optionsCompat: ActivityOptionsCompat =
+                    ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        holder.itemView.context as Activity,
+                        Pair(binding.ivItemPhoto, "iv_item_photo"),
+                        Pair(binding.tvItemName, "tv_item_name"),
+                        Pair(binding.tvDetailDescription, "tv_detail_description")
+                    )
+                context.startActivity(intent, optionsCompat.toBundle())
             }
         }
     }

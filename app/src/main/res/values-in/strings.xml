@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">StoryApp</string>
+    <string name="signup">Daftar</string>
+    <string name="login">Masuk</string>
+    <string name="message_welcome_page">Mau Update kegiatan anda? di StoryApp saja!</string>
+    <string name="title_welcome_page">Selamat datang di StoryApp!</string>
+    <string name="title_signup_page">Lengkapi data dirimu di bawah ini ya</string>
+    <string name="email">Alamat Surel</string>
+    <string name="password">Kata Sandi</string>
+    <string name="message_login_page">Masukkan dulu datamu ya</string>
+    <string name="title_login_page">Sudah siap untuk update story kamu?</string>
+    <string name="name">Nama</string>
+    <string name="message_main_page">Selamat Menggunakan StoryApp</string>
+    <string name="greeting">Halo %1$s,</string>
+    <string name="logout">Keluar</string>
+    <string name="error">Password tidak boleh kurang dari 8 karakter</string>
+    <string name="error_email">Email tidak valid!</string>
+    <string name="gallery">Galeri</string>
+    <string name="camera">Kamera</string>
+    <string name="upload">Unggah</string>
+    <string name="description">Deskripsi</string>
+    <string name="upload_story">Unggah Cerita</string>
+    <string name="empty_image_warning">Foto tidak boleh kosong</string>
+    <string name="desc">Desk</string>
+    <string name="detail_image">Foto Detail</string>
+    <string name="yogyakarta">Yogyakarta</string>
+    <string name="ugm">Gadjah Mada University</string>
+    <string name="image">Foto</string>
+    <string name="dicoding_story_app">Story App</string>
+    <string name="settings">PENGATURAN</string>
+    <string name="about">TENTANG</string>
+    <string name="exit">KELUAR</string>
+</resources>

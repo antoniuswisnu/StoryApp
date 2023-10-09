@@ -49,17 +49,26 @@
         app:layout_constraintTop_toBottomOf="@+id/titleTextView"
         tools:alpha="100" />
 
-    <com.example.storyapp.custom.CustomEditText
-        android:id="@+id/nameEditTextLayout"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/nameEditTextLayoutMaterial"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
-        android:alpha="0"
+        app:startIconDrawable="@drawable/ic_baseline_person_24"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nameTextView"
-        tools:alpha="100" />
+        tools:alpha="100" >
+
+        <com.example.storyapp.custom.CustomEditText
+            android:id="@+id/nameEditTextLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
         android:id="@+id/emailTextView"
@@ -71,7 +80,7 @@
         android:text="@string/email"
         android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nameEditTextLayout"
+        app:layout_constraintTop_toBottomOf="@+id/nameEditTextLayoutMaterial"
         tools:alpha="100" />
 
     <com.google.android.material.textfield.TextInputLayout

@@ -11,6 +11,7 @@ import android.view.View
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.ContextCompat
 import com.example.storyapp.R
+import java.util.Locale
 
 class CustomEditText : AppCompatEditText, View.OnTouchListener {
 
@@ -28,7 +29,11 @@ class CustomEditText : AppCompatEditText, View.OnTouchListener {
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        hint = "Masukkan nama Anda"
+        hint = if (Locale.getDefault().language == "in"){
+            "Masukkan nama Anda"
+        } else {
+            "Enter your name"
+        }
         textAlignment = View.TEXT_ALIGNMENT_VIEW_START
     }
 
