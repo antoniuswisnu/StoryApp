@@ -1,10 +1,12 @@
 package com.example.storyapp.ui.detail
 
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.example.storyapp.api.response.Story
 import com.example.storyapp.databinding.ActivityDetailBinding
 
 class DetailActivity : AppCompatActivity() {
@@ -19,23 +21,34 @@ class DetailActivity : AppCompatActivity() {
 
         detailViewModel = ViewModelProvider(this)[DetailViewModel::class.java]
 
+        val story = if(Build.VERSION.SDK_INT >= 33){
+            intent.getParcelableExtra(EXTRA_STORY, Story::class.java)
+        } else {
+            @Suppress("DEPRECATION")
+            intent.getParcelableExtra(EXTRA_STORY)
+        }
+
         detailViewModel.detailStory.observe(this) { story ->
-            setupView()
+            val name = story?.name
+            val description = story?.description
+            val photoUrl = story?.photoUrl
+
+            try {
+                Glide.with(this)
+                    .load(photoUrl)
+                    .into(binding.imgDetail)
+                binding.tvTitle.text = name
+                binding.tvDesc.text = description
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Log.e("DetailActivity", "setupView: ${e.message}")
+            }
             Log.d("DetailActivity", "onCreate: $story")
         }
-        detailViewModel.getDetailStories(intent.getStringExtra("id")!!)
+        detailViewModel.getDetailStories(story?.id.toString())
     }
 
-    private fun setupView() {
-        val name = intent.getStringExtra("name")
-        val description = intent.getStringExtra("description")
-        val photoUrl = intent.getStringExtra("photoUrl")
-
-        Glide.with(this)
-            .load(photoUrl)
-            .into(binding.imgDetail)
-        binding.tvTitle.text = name
-        binding.tvDesc.text = description
-        Log.d("DetailActivity", "setupView: $name")
+    companion object {
+        const val EXTRA_STORY = "extra_story"
     }
 }

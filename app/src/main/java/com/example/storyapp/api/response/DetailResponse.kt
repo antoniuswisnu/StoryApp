@@ -1,6 +1,10 @@
 package com.example.storyapp.api.response
 
+import android.os.Parcel
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parceler
+import kotlinx.parcelize.Parcelize
 
 data class DetailResponse(
 
@@ -14,6 +18,7 @@ data class DetailResponse(
 	val story: Story? = null
 )
 
+@Parcelize
 data class Story(
 
 	@field:SerializedName("photoUrl")
@@ -28,12 +33,7 @@ data class Story(
 	@field:SerializedName("description")
 	val description: String? = null,
 
-	@field:SerializedName("lon")
-	val lon: Any? = null,
-
 	@field:SerializedName("id")
 	val id: String? = null,
 
-	@field:SerializedName("lat")
-	val lat: Any? = null
-)
+) : Parcelable

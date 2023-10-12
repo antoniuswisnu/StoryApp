@@ -20,6 +20,7 @@ import com.example.storyapp.data.pref.UserModel
 import com.example.storyapp.databinding.ActivityLoginBinding
 import com.example.storyapp.ui.ViewModelFactory
 import com.example.storyapp.ui.main.MainActivity
+import com.google.android.material.snackbar.Snackbar
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var loginViewModel: LoginViewModel
@@ -58,7 +59,7 @@ class LoginActivity : AppCompatActivity() {
                 // Do nothing.
             }
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if (!s.toString().contains("@email")) {
+                if (!s.toString().contains("@email.com")) {
                     binding.emailEditTextLayout.error = getString(R.string.error_email)
                 } else {
                     binding.emailEditTextLayout.error = null
@@ -103,12 +104,11 @@ class LoginActivity : AppCompatActivity() {
             loginViewModel.login(email, password).observe(this) { response ->
                     if (response.error == true) {
                         Log.d("LoginActivity", "Login failed ${response.message}")
-                        Toast.makeText(this, response.message, Toast.LENGTH_SHORT).show()
+                        Snackbar.make(binding.root, "Login failed Email must be a valid email", Snackbar.LENGTH_SHORT).show()
                         email = ""
                         password = ""
                     } else {
-                        Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
-
+                        Snackbar.make(binding.root, "Login Successful", Snackbar.LENGTH_SHORT).show()
                         val userId = response.loginResult?.userId
                         val name = response.loginResult?.name
                         val token = response.loginResult?.token
@@ -119,12 +119,10 @@ class LoginActivity : AppCompatActivity() {
                                 true
                             )
                         )
-
                         Log.d("LoginActivity", "Login successful $userId $name $token")
                         val intent = Intent(this, MainActivity::class.java)
                         startActivity(intent)
                     }
-                Log.d("LoginActivity", "Login successful ${response.message}")
             }
             }
         }

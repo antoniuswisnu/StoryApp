@@ -10,11 +10,9 @@ import android.util.Log
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import com.example.storyapp.R
-import com.example.storyapp.api.response.ErrorResponse
 import com.example.storyapp.api.retrofit.ApiConfig
 import com.example.storyapp.custom.CustomButton
 import com.example.storyapp.custom.CustomEditText
@@ -22,7 +20,7 @@ import com.example.storyapp.data.repository.RegisterRepository
 import com.example.storyapp.databinding.ActivitySignUpBinding
 import com.example.storyapp.ui.ViewModelFactory
 import com.example.storyapp.ui.login.SessionViewModel
-import com.google.gson.Gson
+import com.google.android.material.snackbar.Snackbar
 import retrofit2.HttpException
 
 class SignUpActivity : AppCompatActivity() {
@@ -82,7 +80,7 @@ class SignUpActivity : AppCompatActivity() {
                 // Do nothing.
             }
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if (!s.toString().contains("@email")) {
+                if (!s.toString().contains("@email.com")) {
                     binding.emailEditTextLayout.error = getString(R.string.error_email)
                 } else {
                     binding.emailEditTextLayout.error = null
@@ -126,38 +124,33 @@ class SignUpActivity : AppCompatActivity() {
             val password = binding.passwordEditText.text.toString()
 
             if(name.isEmpty() || email.isEmpty() || password.isEmpty()){
-                Toast.makeText(this, "Please fill all the fields", Toast.LENGTH_SHORT).show()
+                Snackbar.make(binding.root, "Please fill all the fields", Snackbar.LENGTH_SHORT).show()
                 return@setOnClickListener
-            } else {
-            try{
-                viewModel.register(name, email, password).observe(this) { response ->
-                    if (response != null) {
-                        if (response.error) {
+            }
+            else {
+                try{
+                    viewModel.register(name, email, password).observe(this) { response ->
+                        if (!response.error) {
                             Log.d("SignUpActivity", "Registration failed ${response.message}")
-                            Toast.makeText(this, "Please fill all the fields", Toast.LENGTH_SHORT).show()
+                            Snackbar.make(binding.root, "Email is already Taken!", Snackbar.LENGTH_SHORT).show()
                         } else {
                             Log.d("SignUpActivity", "Registration successful ${response.message} $")
-
+                            AlertDialog.Builder(this).apply {
+                                setTitle("Yeah!")
+                                setMessage("Akun dengan $email sudah jadi nih. Yuk, Buat Story Kamu!")
+                                setPositiveButton("Lanjut") { _, _ ->
+                                    finish()
+                                }
+                                create()
+                                show()
+                            }
                         }
                     }
-                }
-            } catch (e: HttpException) {
-                val jsonInString = e.response()?.errorBody()?.string()
-                val errorBody = Gson().fromJson(jsonInString, ErrorResponse::class.java)
-                val errorMessage = errorBody.message
-                Log.e("SignUpActivity", errorMessage.toString())
-            }
-                AlertDialog.Builder(this).apply {
-                    setTitle("Yeah!")
-                    setMessage("Akun dengan $email sudah jadi nih. Yuk, Buat Story Kamu!")
-                    setPositiveButton("Lanjut") { _, _ ->
-                        finish()
-                    }
-                    create()
-                    show()
+                } catch (e: HttpException) {
+                    val jsonInString = e.response()?.errorBody()?.string()
+                    Snackbar.make(binding.root, jsonInString.toString(), Snackbar.LENGTH_SHORT).show()
                 }
             }
-            Log.d("SignUpActivity", "Registration successful $name $email $password")
         }
     }
 

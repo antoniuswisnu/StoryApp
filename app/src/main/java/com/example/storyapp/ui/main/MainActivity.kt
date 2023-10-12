@@ -14,7 +14,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.storyapp.R
 import com.example.storyapp.adapter.StoryAdapter
-import com.example.storyapp.api.response.ListStoryItem
 import com.example.storyapp.databinding.ActivityMainBinding
 import com.example.storyapp.ui.ViewModelFactory
 import com.example.storyapp.ui.camera.UploadActivity
@@ -46,9 +45,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         setupView()
-//        setupAction()
-//        playAnimation()
-
         storyViewModel = ViewModelProvider(this)[StoryViewModel::class.java]
         storyAdapter = StoryAdapter()
         binding.rvStories.layoutManager = LinearLayoutManager(this)
@@ -76,7 +72,6 @@ class MainActivity : AppCompatActivity() {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN
             )
         }
-//        supportActionBar?.hide()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -100,22 +95,4 @@ class MainActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
-
-//
-//    private fun playAnimation() {
-//        ObjectAnimator.ofFloat(binding.imageView, View.TRANSLATION_X, -30f, 30f).apply {
-//            duration = 6000
-//            repeatCount = ObjectAnimator.INFINITE
-//            repeatMode = ObjectAnimator.REVERSE
-//        }.start()
-//
-//        val name = ObjectAnimator.ofFloat(binding.nameTextView, View.ALPHA, 1f).setDuration(500)
-//        val message = ObjectAnimator.ofFloat(binding.messageTextView, View.ALPHA, 1f).setDuration(500)
-//        val logout = ObjectAnimator.ofFloat(binding.logoutButton, View.ALPHA, 1f).setDuration(500)
-//
-//        AnimatorSet().apply {
-//            playSequentially(name, message, logout)
-//            startDelay = 100
-//        }.start()
-//    }
 }

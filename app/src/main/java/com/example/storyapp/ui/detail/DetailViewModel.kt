@@ -22,6 +22,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 _detailStory.postValue(response)
             } catch (e: Exception) {
                 // Handle exception and show error message
+
             }
         }
     }

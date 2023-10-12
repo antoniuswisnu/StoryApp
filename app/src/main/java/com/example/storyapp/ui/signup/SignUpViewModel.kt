@@ -16,7 +16,8 @@ class SignUpViewModel(private val registerRepository: RegisterRepository) : View
                 val response = registerRepository.register(name, email, password)
                 result.postValue(response)
             } catch (e: Exception) {
-                // Handle errors
+                val jsonInString = e.message.toString()
+                result.postValue(RegisterResponse(false, jsonInString))
             }
         }
         return result

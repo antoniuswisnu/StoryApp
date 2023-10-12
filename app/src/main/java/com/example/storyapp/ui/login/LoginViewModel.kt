@@ -16,7 +16,8 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
                 val response = loginRepository.login(email, password)
                 result.postValue(response)
             } catch (e: Exception) {
-                // Handle errors
+                val jsonInString = e.message.toString()
+                result.postValue(LoginResponse(null, true, jsonInString))
             }
         }
         return result
