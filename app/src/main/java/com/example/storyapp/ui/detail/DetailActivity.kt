@@ -4,6 +4,7 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.storyapp.api.response.Story
@@ -20,6 +21,10 @@ class DetailActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         detailViewModel = ViewModelProvider(this)[DetailViewModel::class.java]
+
+        detailViewModel.isLoading.observe(this) {
+            showLoading(it)
+        }
 
         val story = if(Build.VERSION.SDK_INT >= 33){
             intent.getParcelableExtra(EXTRA_STORY, Story::class.java)
@@ -46,6 +51,14 @@ class DetailActivity : AppCompatActivity() {
             Log.d("DetailActivity", "onCreate: $story")
         }
         detailViewModel.getDetailStories(story?.id.toString())
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        if (isLoading) {
+            binding.progressBar.visibility = View.VISIBLE
+        } else {
+            binding.progressBar.visibility = View.GONE
+        }
     }
 
     companion object {

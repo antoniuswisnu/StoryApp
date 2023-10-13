@@ -15,9 +15,14 @@ class StoryViewModel(application: Application) : AndroidViewModel(application) {
     private val _stories = MutableLiveData<List<ListStoryItem>>()
     val stories: LiveData<List<ListStoryItem>> = _stories
 
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> = _isLoading
+
     fun getStories() {
+        _isLoading.value = true
         viewModelScope.launch {
             try {
+                _isLoading.value = false
                 val response = storyRepository.getStories()
                 _stories.postValue(response)
             } catch (e: Exception) {

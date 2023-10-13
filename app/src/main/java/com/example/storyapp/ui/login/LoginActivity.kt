@@ -13,6 +13,7 @@ import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.lifecycle.ViewModelProvider
 import com.example.storyapp.R
 import com.example.storyapp.api.retrofit.ApiConfig.Companion.getApiService
 import com.example.storyapp.data.repository.LoginRepository
@@ -20,6 +21,7 @@ import com.example.storyapp.data.pref.UserModel
 import com.example.storyapp.databinding.ActivityLoginBinding
 import com.example.storyapp.ui.ViewModelFactory
 import com.example.storyapp.ui.main.MainActivity
+import com.example.storyapp.ui.signup.SignUpViewModel
 import com.google.android.material.snackbar.Snackbar
 
 class LoginActivity : AppCompatActivity() {
@@ -38,32 +40,30 @@ class LoginActivity : AppCompatActivity() {
         setupAction()
         playAnimation()
 
+        loginViewModel.isLoading.observe(this) {
+            showLoading(it)
+        }
+
         binding.passwordEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
                 // Do nothing.
             }
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if (s.toString().length < 8) {
-                    binding.passwordEditTextLayout.error = getString(R.string.error)
-                } else {
-                    binding.passwordEditTextLayout.error = null
-                }
+                loginViewModel.validatePassword(s.toString())
+                binding.passwordEditTextLayout.error = if (!loginViewModel.isPasswordValid) getString(R.string.error) else null
             }
             override fun afterTextChanged(s: android.text.Editable) {
                 // Do nothing.
             }
         })
 
-        binding.emailEditText.addTextChangedListener(object : TextWatcher{
+        binding.emailEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
                 // Do nothing.
             }
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if (!s.toString().contains("@email.com")) {
-                    binding.emailEditTextLayout.error = getString(R.string.error_email)
-                } else {
-                    binding.emailEditTextLayout.error = null
-                }
+                loginViewModel.validateEmail(s.toString())
+                binding.emailEditTextLayout.error = if (!loginViewModel.isEmailValid) getString(R.string.error_email) else null
                 setMyButtonEnable()
             }
             override fun afterTextChanged(s: android.text.Editable) {
@@ -96,15 +96,17 @@ class LoginActivity : AppCompatActivity() {
         binding.loginButton.setOnClickListener {
             var email = binding.emailEditText.text.toString()
             var password = binding.passwordEditText.text.toString()
+            binding.progressBar.visibility = View.VISIBLE
 
             if(email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "Please fill all the fields", Toast.LENGTH_SHORT).show()
+                binding.progressBar.visibility = View.GONE
+                Snackbar.make(binding.root, "Email or Password must be filled", Snackbar.LENGTH_SHORT).show()
                 return@setOnClickListener
             } else {
             loginViewModel.login(email, password).observe(this) { response ->
                     if (response.error == true) {
                         Log.d("LoginActivity", "Login failed ${response.message}")
-                        Snackbar.make(binding.root, "Login failed Email must be a valid email", Snackbar.LENGTH_SHORT).show()
+                        Snackbar.make(binding.root, "Login failed Email must be a valid email or Incorrect password", Snackbar.LENGTH_SHORT).show()
                         email = ""
                         password = ""
                     } else {
@@ -156,6 +158,14 @@ class LoginActivity : AppCompatActivity() {
             )
             startDelay = 100
         }.start()
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        if (isLoading) {
+            binding.progressBar.visibility = View.VISIBLE
+        } else {
+            binding.progressBar.visibility = View.GONE
+        }
     }
 
 }

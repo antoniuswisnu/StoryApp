@@ -12,6 +12,7 @@ import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.ViewModelProvider
 import com.example.storyapp.R
 import com.example.storyapp.api.retrofit.ApiConfig
 import com.example.storyapp.custom.CustomButton
@@ -27,7 +28,7 @@ class SignUpActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySignUpBinding
     private lateinit var customButton: CustomButton
-    private lateinit var customEditText: CustomEditText
+    private lateinit var usernameEditText: CustomEditText
     private lateinit var viewModel: SignUpViewModel
     private val sessionViewModel by viewModels<SessionViewModel> {
         ViewModelFactory.getInstance(this)
@@ -43,11 +44,13 @@ class SignUpActivity : AppCompatActivity() {
         playAnimation()
 
         customButton = findViewById(R.id.signupButton)
-        customEditText = findViewById(R.id.nameEditTextLayout)
+        usernameEditText = findViewById(R.id.nameEditTextLayout)
 
-        setMyButtonEnable()
+        viewModel.isLoading.observe(this) {
+            showLoading(it)
+        }
 
-        customEditText.addTextChangedListener(object : TextWatcher{
+        usernameEditText.addTextChangedListener(object : TextWatcher{
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
                 // Do nothing.
             }
@@ -64,27 +67,22 @@ class SignUpActivity : AppCompatActivity() {
                 // Do nothing.
             }
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if (s.toString().length < 8) {
-                    binding.passwordEditTextLayout.error = getString(R.string.error)
-                } else {
-                    binding.passwordEditTextLayout.error = null
-                }
+                viewModel.validatePassword(s.toString())
+                binding.passwordEditTextLayout.error = if (!viewModel.isPasswordValid) getString(R.string.error) else null
             }
             override fun afterTextChanged(s: android.text.Editable) {
                 // Do nothing.
             }
         })
 
-        binding.emailEditText.addTextChangedListener(object : TextWatcher{
+        binding.emailEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
                 // Do nothing.
             }
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if (!s.toString().contains("@email.com")) {
-                    binding.emailEditTextLayout.error = getString(R.string.error_email)
-                } else {
-                    binding.emailEditTextLayout.error = null
-                }
+                viewModel.validateEmail(s.toString())
+                binding.emailEditTextLayout.error = if (!viewModel.isEmailValid) getString(R.string.error_email) else null
+                setMyButtonEnable()
             }
             override fun afterTextChanged(s: android.text.Editable) {
                 // Do nothing.
@@ -94,7 +92,7 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun setMyButtonEnable() {
-        val result = customEditText.text
+        val result = usernameEditText.text
         customButton.isEnabled = result != null && result.toString().isNotEmpty()
     }
 
@@ -122,19 +120,24 @@ class SignUpActivity : AppCompatActivity() {
             val name = binding.nameEditTextLayout.text.toString()
             val email = binding.emailEditText.text.toString()
             val password = binding.passwordEditText.text.toString()
+            binding.progressBar.visibility = View.VISIBLE
 
-            if(name.isEmpty() || email.isEmpty() || password.isEmpty()){
+            if (name.isEmpty() || email.isEmpty() || password.isEmpty()) {
+                binding.progressBar.visibility = View.GONE
                 Snackbar.make(binding.root, "Please fill all the fields", Snackbar.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            else {
-                try{
-                    viewModel.register(name, email, password).observe(this) { response ->
-                        if (!response.error) {
+
+            viewModel.register(name, email, password).observe(this) { result ->
+                when (result) {
+                    is SignUpViewModel.RegisterResult.Success -> {
+                        binding.progressBar.visibility = View.GONE
+                        val response = result.response
+                        if (response.error) {
                             Log.d("SignUpActivity", "Registration failed ${response.message}")
                             Snackbar.make(binding.root, "Email is already Taken!", Snackbar.LENGTH_SHORT).show()
                         } else {
-                            Log.d("SignUpActivity", "Registration successful ${response.message} $")
+                            Log.d("SignUpActivity", "Registration successful ${response.message}")
                             AlertDialog.Builder(this).apply {
                                 setTitle("Yeah!")
                                 setMessage("Akun dengan $email sudah jadi nih. Yuk, Buat Story Kamu!")
@@ -146,12 +149,14 @@ class SignUpActivity : AppCompatActivity() {
                             }
                         }
                     }
-                } catch (e: HttpException) {
-                    val jsonInString = e.response()?.errorBody()?.string()
-                    Snackbar.make(binding.root, jsonInString.toString(), Snackbar.LENGTH_SHORT).show()
+                    is SignUpViewModel.RegisterResult.Error -> {
+                        Log.e("SignUpActivity", "Error during registration: ${result.message}")
+                        Snackbar.make(binding.root, "Email is already Taken!", Snackbar.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
+
     }
 
     private fun playAnimation() {
@@ -184,4 +189,13 @@ class SignUpActivity : AppCompatActivity() {
             startDelay = 100
         }.start()
     }
+
+    private fun showLoading(isLoading: Boolean) {
+        if (isLoading) {
+            binding.progressBar.visibility = View.VISIBLE
+        } else {
+            binding.progressBar.visibility = View.GONE
+        }
+    }
+
 }

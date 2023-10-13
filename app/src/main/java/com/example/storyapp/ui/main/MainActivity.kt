@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.Toast
@@ -54,6 +55,10 @@ class MainActivity : AppCompatActivity() {
             storyAdapter.setStories(stories)
         }
 
+        storyViewModel.isLoading.observe(this) {
+            showLoading(it)
+        }
+
         storyViewModel.getStories()
     }
 
@@ -94,5 +99,13 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        if (isLoading) {
+            binding.progressBar.visibility = View.VISIBLE
+        } else {
+            binding.progressBar.visibility = View.GONE
+        }
     }
 }
