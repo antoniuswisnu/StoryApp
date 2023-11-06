@@ -5,6 +5,9 @@ import com.example.storyapp.api.response.Story
 import com.example.storyapp.api.retrofit.ApiService
 
 class StoryRepository(private val apiService: ApiService) {
+    suspend fun getDetailStory(id: String) : Story? {
+        return apiService.getDetailStories(id).story
+    }
     companion object {
         @Volatile
         private var instance: StoryRepository? = null
@@ -15,12 +18,9 @@ class StoryRepository(private val apiService: ApiService) {
             }
     }
 
-    suspend fun getStories(): List<ListStoryItem> {
-        return apiService.getStories().listStory
-    }
+//    suspend fun getStories(): List<ListStoryItem> {
+//        return apiService.getStories().listStory
+//    }
 
-    suspend fun getDetailStory(id: String) : Story? {
-        return apiService.getDetailStories(id).story
-    }
+
 }
-

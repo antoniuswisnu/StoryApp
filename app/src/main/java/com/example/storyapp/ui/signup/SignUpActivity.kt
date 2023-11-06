@@ -12,23 +12,22 @@ import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.ViewModelProvider
 import com.example.storyapp.R
 import com.example.storyapp.api.retrofit.ApiConfig
 import com.example.storyapp.custom.CustomButton
-import com.example.storyapp.custom.CustomEditText
+import com.example.storyapp.custom.CustomEmailEditText
+import com.example.storyapp.custom.CustomUsernameEditText
 import com.example.storyapp.data.repository.RegisterRepository
 import com.example.storyapp.databinding.ActivitySignUpBinding
 import com.example.storyapp.ui.ViewModelFactory
 import com.example.storyapp.ui.login.SessionViewModel
 import com.google.android.material.snackbar.Snackbar
-import retrofit2.HttpException
 
 class SignUpActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySignUpBinding
     private lateinit var customButton: CustomButton
-    private lateinit var usernameEditText: CustomEditText
+    private lateinit var usernameEditText: CustomUsernameEditText
     private lateinit var viewModel: SignUpViewModel
     private val sessionViewModel by viewModels<SessionViewModel> {
         ViewModelFactory.getInstance(this)
@@ -68,7 +67,7 @@ class SignUpActivity : AppCompatActivity() {
             }
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 viewModel.validatePassword(s.toString())
-                binding.passwordEditTextLayout.error = if (!viewModel.isPasswordValid) getString(R.string.error) else null
+                binding.passwordEditText.error = if (!viewModel.isPasswordValid) getString(R.string.error) else null
             }
             override fun afterTextChanged(s: android.text.Editable) {
                 // Do nothing.
@@ -81,7 +80,7 @@ class SignUpActivity : AppCompatActivity() {
             }
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 viewModel.validateEmail(s.toString())
-                binding.emailEditTextLayout.error = if (!viewModel.isEmailValid) getString(R.string.error_email) else null
+                binding.emailEditText.error = if (!viewModel.isEmailValid) getString(R.string.error_email) else null
                 setMyButtonEnable()
             }
             override fun afterTextChanged(s: android.text.Editable) {
@@ -170,9 +169,9 @@ class SignUpActivity : AppCompatActivity() {
         val nameTextView = ObjectAnimator.ofFloat(binding.nameTextView, View.ALPHA, 1f).setDuration(500)
         val nameEditTextLayout = ObjectAnimator.ofFloat(binding.nameEditTextLayout, View.ALPHA, 1f).setDuration(500)
         val emailTextView = ObjectAnimator.ofFloat(binding.emailTextView, View.ALPHA, 1f).setDuration(500)
-        val emailEditTextLayout = ObjectAnimator.ofFloat(binding.emailEditTextLayout, View.ALPHA, 1f).setDuration(500)
+        val emailEditTextLayout = ObjectAnimator.ofFloat(binding.emailEditText, View.ALPHA, 1f).setDuration(500)
         val passwordTextView = ObjectAnimator.ofFloat(binding.passwordTextView, View.ALPHA, 1f).setDuration(500)
-        val passwordEditTextLayout = ObjectAnimator.ofFloat(binding.passwordEditTextLayout, View.ALPHA, 1f).setDuration(500)
+        val passwordEditTextLayout = ObjectAnimator.ofFloat(binding.passwordEditText, View.ALPHA, 1f).setDuration(500)
         val signup = ObjectAnimator.ofFloat(binding.signupButton, View.ALPHA, 1f).setDuration(500)
 
         AnimatorSet().apply {

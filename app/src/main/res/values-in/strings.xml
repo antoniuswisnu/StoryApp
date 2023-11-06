@@ -31,4 +31,11 @@
     <string name="settings">PENGATURAN</string>
     <string name="about">TENTANG</string>
     <string name="exit">KELUAR</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="normal_type">Normal</string>
+    <string name="satellite_type">Satelit</string>
+    <string name="terrain_type">Medan</string>
+    <string name="hybrid_type">Hibrida</string>
+    <string name="maps">Peta</string>
+
 </resources>

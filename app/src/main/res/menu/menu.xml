@@ -6,7 +6,7 @@
                 android:id="@+id/settings"
                 android:icon="@drawable/ic_settings"
                 android:title="@string/settings"
-                app:showAsAction="always" />
+                app:showAsAction="never" />
             <item
                 android:id="@+id/about"
                 android:icon="@drawable/ic_about"
@@ -17,4 +17,9 @@
                 android:icon="@drawable/ic_exit"
                 android:title="@string/exit"
                 app:showAsAction="never" />
+            <item
+                android:id="@+id/maps"
+                android:icon="@drawable/ic_map"
+                android:title="@string/maps"
+                app:showAsAction="always" />
 </menu>

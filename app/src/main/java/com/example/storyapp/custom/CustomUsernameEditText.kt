@@ -13,7 +13,7 @@ import androidx.core.content.ContextCompat
 import com.example.storyapp.R
 import java.util.Locale
 
-class CustomEditText : AppCompatEditText, View.OnTouchListener {
+class CustomUsernameEditText : AppCompatEditText, View.OnTouchListener {
 
     private lateinit var clearButtonImage: Drawable
 

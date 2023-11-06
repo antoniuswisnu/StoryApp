@@ -11,17 +11,17 @@ import android.util.Log
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
-import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.lifecycle.ViewModelProvider
 import com.example.storyapp.R
+import com.example.storyapp.api.response.LoginResponse
+import com.example.storyapp.api.response.LoginResult
 import com.example.storyapp.api.retrofit.ApiConfig.Companion.getApiService
+import com.example.storyapp.data.pref.LoginPreferences
 import com.example.storyapp.data.repository.LoginRepository
 import com.example.storyapp.data.pref.UserModel
 import com.example.storyapp.databinding.ActivityLoginBinding
 import com.example.storyapp.ui.ViewModelFactory
 import com.example.storyapp.ui.main.MainActivity
-import com.example.storyapp.ui.signup.SignUpViewModel
 import com.google.android.material.snackbar.Snackbar
 
 class LoginActivity : AppCompatActivity() {
@@ -50,7 +50,7 @@ class LoginActivity : AppCompatActivity() {
             }
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 loginViewModel.validatePassword(s.toString())
-                binding.passwordEditTextLayout.error = if (!loginViewModel.isPasswordValid) getString(R.string.error) else null
+                binding.passwordEditText.error = if (!loginViewModel.isPasswordValid) getString(R.string.error) else null
             }
             override fun afterTextChanged(s: android.text.Editable) {
                 // Do nothing.
@@ -63,7 +63,7 @@ class LoginActivity : AppCompatActivity() {
             }
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 loginViewModel.validateEmail(s.toString())
-                binding.emailEditTextLayout.error = if (!loginViewModel.isEmailValid) getString(R.string.error_email) else null
+                binding.emailEditText.error = if (!loginViewModel.isEmailValid) getString(R.string.error_email) else null
                 setMyButtonEnable()
             }
             override fun afterTextChanged(s: android.text.Editable) {
@@ -93,6 +93,8 @@ class LoginActivity : AppCompatActivity() {
     private fun setupAction() {
         loginViewModel = LoginViewModel(LoginRepository(getApiService(sessionViewModel.getSession().toString())))
 
+        Log.d("LoginActivity", "setupAction: $sessionViewModel")
+
         binding.loginButton.setOnClickListener {
             var email = binding.emailEditText.text.toString()
             var password = binding.passwordEditText.text.toString()
@@ -111,23 +113,35 @@ class LoginActivity : AppCompatActivity() {
                         password = ""
                     } else {
                         Snackbar.make(binding.root, "Login Successful", Snackbar.LENGTH_SHORT).show()
-                        val userId = response.loginResult?.userId
-                        val name = response.loginResult?.name
-                        val token = response.loginResult?.token
-                        sessionViewModel.saveSession(
-                            UserModel(
-                                email,
-                                token.toString(),
-                                true
-                            )
-                        )
-                        Log.d("LoginActivity", "Login successful $userId $name $token")
+//                        val userId = response.loginResult?.userId
+//                        val name = response.loginResult?.name
+//                        val token = response.loginResult?.token
+//                        sessionViewModel.saveSession(
+//                            UserModel(
+//                                email,
+//                                token.toString(),
+//                                true
+//                            )
+//                        )
+                        // Save login data
+                        saveLoginData(response)
+                        Log.d("LoginActivity", "Login successful $response")
+//                        Log.d("LoginActivity", "Login successful $userId $name $token")
                         val intent = Intent(this, MainActivity::class.java)
                         startActivity(intent)
                     }
             }
             }
         }
+    }
+
+    private fun saveLoginData(loginResponse: LoginResponse) {
+        val loginPreference = LoginPreferences(this)
+        val loginResult = loginResponse.loginResult
+        val loginModel = LoginResult(
+            name = loginResult?.name, userId = loginResult?.userId, token = loginResult?.token
+        )
+        loginPreference.setLogin(loginModel)
     }
 
     private fun playAnimation() {
@@ -141,9 +155,9 @@ class LoginActivity : AppCompatActivity() {
         val message = ObjectAnimator.ofFloat(binding.messageTextView, View.ALPHA, 1f).setDuration(500)
         val emailTextView = ObjectAnimator.ofFloat(binding.emailTextView, View.ALPHA, 1f).setDuration(500)
         val login = ObjectAnimator.ofFloat(binding.loginButton, View.ALPHA, 1f).setDuration(500)
-        val emailEditTextLayout = ObjectAnimator.ofFloat(binding.emailEditTextLayout, View.ALPHA, 1f).setDuration(500)
+        val emailEditTextLayout = ObjectAnimator.ofFloat(binding.emailEditText, View.ALPHA, 1f).setDuration(500)
         val passwordTextView = ObjectAnimator.ofFloat(binding.passwordTextView, View.ALPHA, 1f).setDuration(500)
-        val passwordEditTextLayout = ObjectAnimator.ofFloat(binding.passwordEditTextLayout, View.ALPHA, 1f).setDuration(500)
+        val passwordEditTextLayout = ObjectAnimator.ofFloat(binding.passwordEditText, View.ALPHA, 1f).setDuration(500)
 
 
         AnimatorSet().apply {

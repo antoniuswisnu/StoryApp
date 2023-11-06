@@ -2,10 +2,10 @@ package com.example.storyapp.di
 
 import android.content.Context
 import com.example.storyapp.api.retrofit.ApiConfig
-import com.example.storyapp.data.repository.StoryRepository
-import com.example.storyapp.data.repository.UserRepository
 import com.example.storyapp.data.pref.UserPreference
+import com.example.storyapp.data.repository.UserRepository
 import com.example.storyapp.data.pref.dataStore
+import com.example.storyapp.data.repository.StoryRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 

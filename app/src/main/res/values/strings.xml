@@ -30,4 +30,10 @@
     <string name="settings">SETTINGS</string>
     <string name="about">ABOUT</string>
     <string name="exit">EXIT</string>
+    <string name="normal_type">Normal</string>
+    <string name="satellite_type">Satellite</string>
+    <string name="terrain_type">Terrain</string>
+    <string name="hybrid_type">Hybrid</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="maps">Map</string>
 </resources>
