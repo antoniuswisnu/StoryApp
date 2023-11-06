@@ -1,6 +1,5 @@
 package com.example.storyapp.data.repository
 
-import com.example.storyapp.api.response.ListStoryItem
 import com.example.storyapp.api.response.Story
 import com.example.storyapp.api.retrofit.ApiService
 
@@ -17,10 +16,4 @@ class StoryRepository(private val apiService: ApiService) {
                 instance ?: StoryRepository(apiService).also { instance = it }
             }
     }
-
-//    suspend fun getStories(): List<ListStoryItem> {
-//        return apiService.getStories().listStory
-//    }
-
-
 }

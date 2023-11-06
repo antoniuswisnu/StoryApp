@@ -1,7 +1,6 @@
 package com.example.storyapp.data.repository
 
 import com.example.storyapp.data.pref.UserModel
-import com.example.storyapp.data.pref.LoginPreferences
 import com.example.storyapp.data.pref.UserPreference
 import kotlinx.coroutines.flow.Flow
 

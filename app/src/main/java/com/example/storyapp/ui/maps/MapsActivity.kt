@@ -1,6 +1,5 @@
 package com.example.storyapp.ui.maps
 
-import android.content.Context
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import androidx.appcompat.app.AppCompatActivity
@@ -10,14 +9,11 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.example.storyapp.R
 import com.example.storyapp.api.response.ListStoryItem
 import com.example.storyapp.data.pref.LoginPreferences
-import com.example.storyapp.data.pref.UserPreference
-import com.example.storyapp.data.pref.dataStore
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -57,7 +53,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         return ViewModelProvider(activity, factory)[MapViewModel::class.java]
     }
     override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
         return true
     }
 
@@ -125,7 +120,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
                     is ResultState.Success -> {
                         showLoading(false)
-                        showMarker(result.data.listStory, googleMap, this)
+                        showMarker(result.data.listStory, googleMap)
                     }
                 }
             }
@@ -133,7 +128,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    private fun showMarker(listStory: List<ListStoryItem>, googleMap: GoogleMap, context: Context) {
+    private fun showMarker(listStory: List<ListStoryItem>, googleMap: GoogleMap) {
         listStory.forEach { story ->
             val latLng = LatLng(story.lat, story.lon)
             val date = DateFormatter.formatDate(story.createdAt, TimeZone.getDefault().id)
@@ -177,10 +172,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             val success =
                 mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style))
             if (!success) {
-                Log.e(TAG, "Style parsing failed.")
+                Log.e(TAG, "Failed")
             }
         } catch (exception: Resources.NotFoundException) {
-            Log.e(TAG, "Can't find style. Error: ", exception)
+            Log.e(TAG, "Error ", exception)
         }
     }
 

@@ -10,10 +10,4 @@ data class RegisterResponse (
     val message: String
 )
 
-data class ErrorResponse(
-    @field:SerializedName("error")
-    val error: Boolean? = null,
-    @field:SerializedName("message")
-    val message: String? = null
-)
 

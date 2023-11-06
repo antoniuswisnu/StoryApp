@@ -5,7 +5,6 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.storyapp.data.pref.LoginPreferences
-import com.example.storyapp.data.pref.UserPreference
 import com.example.storyapp.data.repository.UserRepository
 import com.example.storyapp.di.Injection
 import com.example.storyapp.ui.login.SessionViewModel

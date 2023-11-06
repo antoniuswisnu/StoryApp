@@ -15,7 +15,6 @@ import androidx.appcompat.app.AlertDialog
 import com.example.storyapp.R
 import com.example.storyapp.api.retrofit.ApiConfig
 import com.example.storyapp.custom.CustomButton
-import com.example.storyapp.custom.CustomEmailEditText
 import com.example.storyapp.custom.CustomUsernameEditText
 import com.example.storyapp.data.repository.RegisterRepository
 import com.example.storyapp.databinding.ActivitySignUpBinding

@@ -2,7 +2,6 @@ package com.example.storyapp.adapter
 
 import android.app.Activity
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.app.ActivityOptionsCompat
@@ -48,8 +47,6 @@ class StoryAdapter : PagingDataAdapter<ListStoryItem, StoryAdapter.ListViewHolde
                 Glide.with(itemView.context)
                     .load(url)
                     .into(binding.ivItemPhoto)
-                Log.d("StoryAdapter", "bind: ${data.name}")
-                Log.d("StoryAdapter", "bind: $url")
             }
 
             itemView.setOnClickListener {
@@ -60,8 +57,6 @@ class StoryAdapter : PagingDataAdapter<ListStoryItem, StoryAdapter.ListViewHolde
                     data.description,
                     data.id,
                 )
-
-                Log.d("StoryAdapter", "bind: $story")
 
                 val intent = Intent(itemView.context, DetailActivity::class.java)
                 intent.putExtra(DetailActivity.EXTRA_STORY, story)

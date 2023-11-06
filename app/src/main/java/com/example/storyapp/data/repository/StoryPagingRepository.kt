@@ -1,35 +1,19 @@
 package com.example.storyapp.data.repository
 
 import android.app.Application
-import android.util.Log
-import androidx.activity.viewModels
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStoreOwner
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.liveData
-import androidx.lifecycle.observe
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.liveData
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.storyapp.api.response.ListStoryItem
-import com.example.storyapp.api.response.Story
 import com.example.storyapp.api.response.StoryResponse
 import com.example.storyapp.api.retrofit.ApiConfig
 import com.example.storyapp.api.retrofit.ApiService
 import com.example.storyapp.data.paging.StoryPagingSource
 import com.example.storyapp.data.pref.LoginPreferences
-import com.example.storyapp.data.pref.UserModel
 import com.example.storyapp.di.ResultState
-import com.example.storyapp.data.pref.UserPreference
-import com.example.storyapp.data.pref.dataStore
-import com.example.storyapp.ui.ViewModelFactory
-import com.example.storyapp.ui.login.LoginViewModel
-import com.example.storyapp.ui.login.SessionViewModel
-import com.example.storyapp.ui.main.MainViewModel
-import com.example.storyapp.ui.welcome.WelcomeActivity
 
 
 class StoryPagingRepository constructor(application: Application, private val userPreferences: LoginPreferences) {
@@ -65,16 +49,4 @@ class StoryPagingRepository constructor(application: Application, private val us
             emit(ResultState.Error(e.message.toString()))
         }
     }
-    suspend fun getDetailStory(id: String) : Story? {
-        return apiService.getDetailStories(id).story
-    }
-//    companion object {
-//        @Volatile
-//        private var instance: StoryPagingRepository? = null
-//
-//        fun getInstance(apiService: ApiService,storyDatabase: StoryDatabase): StoryPagingRepository =
-//            instance ?: synchronized(this) {
-//                instance ?: StoryPagingRepository(apiService, storyDatabase).also { instance = it }
-//            }
-//    }
 }

@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -20,8 +19,6 @@ import com.example.storyapp.adapter.StoryAdapter
 import com.example.storyapp.api.response.LoginResult
 import com.example.storyapp.data.paging.LoadingStateAdapter
 import com.example.storyapp.data.pref.LoginPreferences
-import com.example.storyapp.data.pref.UserPreference
-import com.example.storyapp.data.pref.dataStore
 import com.example.storyapp.databinding.ActivityMainBinding
 import com.example.storyapp.ui.MapViewModelFactory
 import com.example.storyapp.ui.ViewModelFactory
@@ -37,21 +34,17 @@ class MainActivity : AppCompatActivity() {
     private val viewModel by viewModels<MainViewModel> {
         ViewModelFactory.getInstance(this)
     }
-//    private val storiesViewModel by viewModels<StoriesViewModel> {
-//        MapViewModelFactory.getInstance(application, UserPreference(dataStore))
-//    }
     private lateinit var storiesViewModel :  StoriesViewModel
     private lateinit var preference: LoginPreferences
+    private lateinit var loginModel: LoginResult
     private lateinit var binding: ActivityMainBinding
 
-    private lateinit var loginModel: LoginResult
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-//        storiesViewModel = ViewModelProvider(this)[StoriesViewModel::class.java]
         storiesViewModel = obtainViewModel(this as AppCompatActivity)
         setupView()
         showLoading(true)
@@ -74,18 +67,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-
-//        viewModel.getSession().observe(this) { user ->
-//            if (!user.isLogin) {
-//                startActivity(Intent(this, WelcomeActivity::class.java))
-//                finish()
-//            } else {
-//                binding.rvStories.layoutManager = LinearLayoutManager(this)
-//                getData()
-//            }
-//            Log.d("MainActivity", "onCreate: $user")
-//
-//        }
     }
 
     private fun obtainViewModel(activity: AppCompatActivity): StoriesViewModel {

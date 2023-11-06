@@ -18,7 +18,6 @@ import com.example.storyapp.api.response.LoginResult
 import com.example.storyapp.api.retrofit.ApiConfig.Companion.getApiService
 import com.example.storyapp.data.pref.LoginPreferences
 import com.example.storyapp.data.repository.LoginRepository
-import com.example.storyapp.data.pref.UserModel
 import com.example.storyapp.databinding.ActivityLoginBinding
 import com.example.storyapp.ui.ViewModelFactory
 import com.example.storyapp.ui.main.MainActivity
@@ -107,26 +106,12 @@ class LoginActivity : AppCompatActivity() {
             } else {
             loginViewModel.login(email, password).observe(this) { response ->
                     if (response.error == true) {
-                        Log.d("LoginActivity", "Login failed ${response.message}")
                         Snackbar.make(binding.root, "Login failed Email must be a valid email or Incorrect password", Snackbar.LENGTH_SHORT).show()
                         email = ""
                         password = ""
                     } else {
                         Snackbar.make(binding.root, "Login Successful", Snackbar.LENGTH_SHORT).show()
-//                        val userId = response.loginResult?.userId
-//                        val name = response.loginResult?.name
-//                        val token = response.loginResult?.token
-//                        sessionViewModel.saveSession(
-//                            UserModel(
-//                                email,
-//                                token.toString(),
-//                                true
-//                            )
-//                        )
-                        // Save login data
                         saveLoginData(response)
-                        Log.d("LoginActivity", "Login successful $response")
-//                        Log.d("LoginActivity", "Login successful $userId $name $token")
                         val intent = Intent(this, MainActivity::class.java)
                         startActivity(intent)
                     }

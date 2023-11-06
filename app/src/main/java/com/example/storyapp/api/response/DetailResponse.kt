@@ -1,9 +1,7 @@
 package com.example.storyapp.api.response
 
-import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import kotlinx.parcelize.Parceler
 import kotlinx.parcelize.Parcelize
 
 data class DetailResponse(

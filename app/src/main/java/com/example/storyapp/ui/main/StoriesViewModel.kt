@@ -8,7 +8,6 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.example.storyapp.api.response.ListStoryItem
 import com.example.storyapp.data.pref.LoginPreferences
-import com.example.storyapp.data.pref.UserPreference
 import com.example.storyapp.data.repository.StoryPagingRepository
 
 class StoriesViewModel (application: Application,
